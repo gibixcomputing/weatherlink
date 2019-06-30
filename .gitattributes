@@ -1,0 +1,23 @@
+# Initial file sourced from
+#   https://github.com/dotnet/corefx/blob/master/.gitattributes
+
+* text=auto
+
+###############################################################################
+# Set default behavior for command prompt diff.
+#
+# This is need for earlier builds of msysgit that does not have it on by
+# default for csharp files.
+# Note: This is only used by command line
+###############################################################################
+*.cs     diff=csharp
+
+# Force bash scripts to always use lf line endings so that if a repo is accessed
+# in Unix via a file share from Windows, the scripts will work.
+*.sh text eol=lf
+*.code-workspace eol=lf
+
+# Set linguist language for .h files explicitly based on
+# https://github.com/github/linguist/issues/1626#issuecomment-401442069
+# this only affects the repo's language statistics
+*.h linguist-language=C
