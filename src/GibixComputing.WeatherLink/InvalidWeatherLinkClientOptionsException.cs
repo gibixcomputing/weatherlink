@@ -10,7 +10,7 @@ namespace GibixComputing.WeatherLink
     /// Represents an error while parsing options provided in a <see cref="WeatherLinkClientOptions"/> instance.
     /// </summary>
     [Serializable]
-    internal class InvalidWeatherLinkClientOptionsException : WeatherLinkException
+    public class InvalidWeatherLinkClientOptionsException : WeatherLinkException
     {
         /// <summary>
         /// Contains the options object that failed parsing, if available.
@@ -26,24 +26,15 @@ namespace GibixComputing.WeatherLink
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidWeatherLinkClientOptionsException"/> class
-        /// with the specified error message and associated option data.
-        /// </summary>
-        /// <param name="message">The error message that explains the reason for the exception.</param>
-        /// <param name="options">The options data that failed to parse.</param>
-        public InvalidWeatherLinkClientOptionsException(string message, WeatherLinkClientOptions options) : base(message)
-        {
-            Options = options;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidWeatherLinkClientOptionsException"/> class
         /// with a specified error message and a reference to the inner exception that is the cause of this
         /// exception.
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="options">The options data that failed to parse.</param>
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
-        public InvalidWeatherLinkClientOptionsException(string message, Exception innerException) : base(message, innerException)
+        public InvalidWeatherLinkClientOptionsException(string message, WeatherLinkClientOptions options, Exception innerException) : base(message, innerException)
         {
+            Options = options;
         }
 
         /// <summary>
@@ -65,11 +56,28 @@ namespace GibixComputing.WeatherLink
         {
             var options = new WeatherLinkClientOptions
             {
-                IPAddress = info.GetString("options.IPAddress"),
-                Port = info.GetValue("options.Port", typeof(int?)) as int? ?? 0
+                Address = info.GetString($"{nameof(InvalidWeatherLinkClientOptionsException)}.{nameof(Options)}.{nameof(Options.Address)}"),
+                Port = (int)info.GetValue($"{nameof(InvalidWeatherLinkClientOptionsException)}.{nameof(Options)}.{nameof(Options.Port)}", typeof(int))
             };
 
             Options = options;
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info is null)
+                throw new ArgumentNullException(nameof(info));
+
+            var options = Options ?? new WeatherLinkClientOptions();
+
+            info.AddValue(
+                $"{nameof(InvalidWeatherLinkClientOptionsException)}.{nameof(Options)}.{nameof(Options.Address)}",
+                options.Address);
+            info.AddValue(
+                $"{nameof(InvalidWeatherLinkClientOptionsException)}.{nameof(Options)}.{nameof(Options.Port)}",
+                options.Port);
+
+            base.GetObjectData(info, context);
         }
     }
 }

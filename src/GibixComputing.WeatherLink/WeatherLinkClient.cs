@@ -7,11 +7,15 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using GibixComputing.WeatherLink.Validators;
 
 namespace GibixComputing.WeatherLink
 {
     public class WeatherLinkClient
     {
+        private static readonly Lazy<WeatherLinkClientOptionsValidator> s_optionsValidator =
+            new Lazy<WeatherLinkClientOptionsValidator>();
+
         private readonly IPEndPoint _endPoint;
 
         /// <summary>
@@ -27,13 +31,14 @@ namespace GibixComputing.WeatherLink
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
 
-            if (!IPAddress.TryParse(options.IPAddress, out var address))
-                throw new InvalidWeatherLinkClientOptionsException("Invalid IP Address provided.", options);
+            var result = s_optionsValidator.Value.Validate(options);
+            if (!result.IsValid)
+            {
+                var errors = new FluentValidation.ValidationException(result.Errors);
+                throw new InvalidWeatherLinkClientOptionsException("Invalid options provided. See validation errors.", options, errors);
+            }
 
-            var port = options.Port;
-            if (port < 0 || port > 65535)
-                throw new InvalidWeatherLinkClientOptionsException("Invalid Port provided. Valid values are between 0 and 65535.", options);
-
+            var (address, port) = options;
             _endPoint = new IPEndPoint(address, port);
         }
     }
