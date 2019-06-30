@@ -3,10 +3,6 @@ This repo contains the library implementation for connecting with the Davis
 Instruments WeatherLinkIP™ data logger. This library aims to provide a fully
 managed C# interface for the logging and submission of weather-related data.
 
-# License
-This library is licensed under the [GNU Affero General Public License, Version
-3](/LICENSE).
-
 # Guidelines
 This project generally follows the recommendations and coding guidelines set
 forth in CoreFX repository in the .NET Foundation. The files
@@ -21,7 +17,13 @@ Tim Pope has written some good guidelines in
 The information contained at this page is well worth the read. Good commit
 hygine is a great thing!
 
+# License
+This library is licensed under the [GNU Affero General Public License, Version
+3](/LICENSE).
+
 # Disclaimer
 WeatherLinkIP™, Vantage Pro™, Vantage Pro 2™, Vantage Vue™, WeatherLink®, and
-any other trademarks are wholy owned by Davis Instruments. This library makes
-no claim to their use other than by reference.
+any other trademarks are wholy owned by Davis Instruments or their respective
+copyright holder. This library makes no claim to these trademarks and/or
+copyrights. Any reference is purely informational. This project is not
+endorsed or affiliated with Davis Instruments.
